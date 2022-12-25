@@ -30,6 +30,14 @@ def get_dataset(args, config):
         test_dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
                                transform=test_transform)
 
+        if config.data.sub_dataset:
+            print(dataset.data.shape)
+            print(type(dataset.data))
+            print(dataset.targets.shape)
+            print(type(dataset.targets))
+            input("check")
+            # idx = 
+
     elif config.data.dataset == 'CELEBA':
         if config.data.random_flip:
             dataset = CelebA(root=os.path.join(args.exp, 'datasets', 'celeba'), split='train',
