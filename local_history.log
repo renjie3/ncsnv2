@@ -1,0 +1,9 @@
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --sample --config cifar10.yml -i cifar10
+python main.py --sample --config cifar10.yml -i cifar10 --doc test_cifar10
+python main.py --sample --config cifar10.yml -i cifar10 --doc test_cifar10
+python main.py --sample --config cifar10.yml -i cifar10 --doc test_cifar10
+python main.py --sample --config cifar10.yml -i cifar10 --doc test_cifar10

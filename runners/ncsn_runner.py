@@ -232,8 +232,7 @@ class NCSNRunner():
         sigmas = sigmas_th.cpu().numpy()
 
         dataset, _ = get_dataset(self.args, self.config)
-        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=True,
-                                num_workers=4)
+        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=True, num_workers=4)
 
         score.eval()
 
@@ -410,6 +409,77 @@ class NCSNRunner():
 
                     save_image(img, os.path.join(self.args.image_folder, 'image_{}.png'.format(img_id)))
                     img_id += 1
+
+    def adv(self):
+        if self.config.sampling.ckpt_id is None:
+            states = torch.load(os.path.join(self.args.log_path, 'checkpoint.pth'), map_location=self.config.device)
+        else:
+            states = torch.load(os.path.join(self.args.log_path, f'checkpoint_{self.config.sampling.ckpt_id}.pth'),
+                                map_location=self.config.device)
+
+        score = get_model(self.config)
+        score = torch.nn.DataParallel(score)
+
+        score.load_state_dict(states[0], strict=True)
+
+        if self.config.model.ema:
+            ema_helper = EMAHelper(mu=self.config.model.ema_rate)
+            ema_helper.register(score)
+            ema_helper.load_state_dict(states[-1])
+            ema_helper.ema(score)
+
+        sigmas_th = get_sigmas(self.config)
+        sigmas = sigmas_th.cpu().numpy()
+
+        dataset, _ = get_dataset(self.args, self.config)
+        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=True, num_workers=4)
+
+        score.eval()
+
+        if self.config.sampling.data_init:
+            data_iter = iter(dataloader)
+            samples, _ = next(data_iter)
+            samples = samples.to(self.config.device)
+            samples = data_transform(self.config, samples)
+            init_samples = samples + sigmas_th[0] * torch.randn_like(samples)
+
+        else:
+            init_samples = torch.rand(self.config.sampling.batch_size, self.config.data.channels,
+                                        self.config.data.image_size, self.config.data.image_size,
+                                        device=self.config.device)
+            init_samples = data_transform(self.config, init_samples)
+
+        all_samples = anneal_Langevin_dynamics(init_samples, score, sigmas,
+                                                self.config.sampling.n_steps_each,
+                                                self.config.sampling.step_lr, verbose=True,
+                                                final_only=self.config.sampling.final_only,
+                                                denoise=self.config.sampling.denoise)
+
+        if not self.config.sampling.final_only:
+            for i, sample in tqdm.tqdm(enumerate(all_samples), total=len(all_samples),
+                                        desc="saving image samples"):
+                sample = sample.view(sample.shape[0], self.config.data.channels,
+                                        self.config.data.image_size,
+                                        self.config.data.image_size)
+
+                sample = inverse_data_transform(self.config, sample)
+
+                image_grid = make_grid(sample, int(np.sqrt(self.config.sampling.batch_size)))
+                save_image(image_grid, os.path.join(self.args.image_folder, 'image_grid_{}.png'.format(i)))
+                torch.save(sample, os.path.join(self.args.image_folder, 'samples_{}.pth'.format(i)))
+        else:
+            sample = all_samples[-1].view(all_samples[-1].shape[0], self.config.data.channels,
+                                            self.config.data.image_size,
+                                            self.config.data.image_size)
+
+            sample = inverse_data_transform(self.config, sample)
+
+            image_grid = make_grid(sample, int(np.sqrt(self.config.sampling.batch_size)))
+            save_image(image_grid, os.path.join(self.args.image_folder,
+                                                'image_grid_{}.png'.format(self.config.sampling.ckpt_id)))
+            torch.save(sample, os.path.join(self.args.image_folder,
+                                            'samples_{}.pth'.format(self.config.sampling.ckpt_id)))
+
 
     def test(self):
         score = get_model(self.config)

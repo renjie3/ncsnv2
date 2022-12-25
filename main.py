@@ -30,9 +30,10 @@ def parse_args_and_config():
     parser.add_argument('--resume_training', action='store_true', help='Whether to resume training')
     parser.add_argument('-i', '--image_folder', type=str, default='images', help="The folder name of samples")
     parser.add_argument('--ni', action='store_true', help="No interaction. Suitable for Slurm Job launcher")
+    parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()
-    args.log_path = os.path.join(args.exp, 'logs', args.doc)
+    args.log_path = os.path.join(args.exp, 'logs', args.doc, args.job_id)
 
     # parse config file
     with open(os.path.join('configs', args.config), 'r') as f:
