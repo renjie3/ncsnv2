@@ -1,0 +1,25 @@
+Sun 25 Dec 2022 08:27:17 PM EST
+
+GPU_ID=1
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+---------------------------------------------------------------
+Sun 25 Dec 2022 08:28:06 PM EST
+1
+GPU_ID=1
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+---------------------------------------------------------------
+Sun 25 Dec 2022 08:28:20 PM EST
+2
+GPU_ID=1
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+---------------------------------------------------------------
+Sun 25 Dec 2022 08:29:40 PM EST
+3
+GPU_ID=1
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+---------------------------------------------------------------
+Sun 25 Dec 2022 08:32:09 PM EST
+4
+GPU_ID=0, 6
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+---------------------------------------------------------------

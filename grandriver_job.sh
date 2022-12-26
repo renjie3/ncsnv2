@@ -3,8 +3,8 @@ echo $JOB_ID
 NEXT_JOB_ID=`expr $JOB_ID + 1`
 echo $NEXT_JOB_ID > job_id.log
 
-GPU_ID='4'
-MY_CMD="python main.py --config cifar10.yml --doc cifar10"
+GPU_ID='0, 6'
+MY_CMD="python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh

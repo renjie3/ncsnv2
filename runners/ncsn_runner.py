@@ -1,7 +1,7 @@
 import numpy as np
 import glob
 import tqdm
-from losses.dsm import anneal_dsm_score_estimation
+from losses.dsm import anneal_dsm_score_estimation, anneal_dsm_score_estimation_given_sigmas_noise
 
 import torch.nn.functional as F
 import logging
@@ -436,49 +436,18 @@ class NCSNRunner():
 
         score.eval()
 
-        if self.config.sampling.data_init:
-            data_iter = iter(dataloader)
-            samples, _ = next(data_iter)
-            samples = samples.to(self.config.device)
-            samples = data_transform(self.config, samples)
-            init_samples = samples + sigmas_th[0] * torch.randn_like(samples)
+        for i, (X, y) in enumerate(dataloader):
 
-        else:
-            init_samples = torch.rand(self.config.sampling.batch_size, self.config.data.channels,
-                                        self.config.data.image_size, self.config.data.image_size,
-                                        device=self.config.device)
-            init_samples = data_transform(self.config, init_samples)
+            X = X.to(self.config.device)
+            X = data_transform(self.config, X)
 
-        all_samples = anneal_Langevin_dynamics(init_samples, score, sigmas,
-                                                self.config.sampling.n_steps_each,
-                                                self.config.sampling.step_lr, verbose=True,
-                                                final_only=self.config.sampling.final_only,
-                                                denoise=self.config.sampling.denoise)
+            labels = torch.randint(0, len(sigmas), (X.shape[0],), device=samples.device)
+            used_sigmas = sigmas[labels].view(X.shape[0], *([1] * len(samples.shape[1:])))
+            random_noise = torch.randn_like(X)
 
-        if not self.config.sampling.final_only:
-            for i, sample in tqdm.tqdm(enumerate(all_samples), total=len(all_samples),
-                                        desc="saving image samples"):
-                sample = sample.view(sample.shape[0], self.config.data.channels,
-                                        self.config.data.image_size,
-                                        self.config.data.image_size)
+            loss = anneal_dsm_score_estimation(score, X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=self.config.training.anneal_power, hook=hook)
 
-                sample = inverse_data_transform(self.config, sample)
-
-                image_grid = make_grid(sample, int(np.sqrt(self.config.sampling.batch_size)))
-                save_image(image_grid, os.path.join(self.args.image_folder, 'image_grid_{}.png'.format(i)))
-                torch.save(sample, os.path.join(self.args.image_folder, 'samples_{}.pth'.format(i)))
-        else:
-            sample = all_samples[-1].view(all_samples[-1].shape[0], self.config.data.channels,
-                                            self.config.data.image_size,
-                                            self.config.data.image_size)
-
-            sample = inverse_data_transform(self.config, sample)
-
-            image_grid = make_grid(sample, int(np.sqrt(self.config.sampling.batch_size)))
-            save_image(image_grid, os.path.join(self.args.image_folder,
-                                                'image_grid_{}.png'.format(self.config.sampling.ckpt_id)))
-            torch.save(sample, os.path.join(self.args.image_folder,
-                                            'samples_{}.pth'.format(self.config.sampling.ckpt_id)))
+            input("check")
 
 
     def test(self):

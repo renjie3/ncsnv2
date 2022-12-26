@@ -27,13 +27,17 @@ def parse_args_and_config():
     parser.add_argument('--test', action='store_true', help='Whether to test the model')
     parser.add_argument('--sample', action='store_true', help='Whether to produce samples from the model')
     parser.add_argument('--fast_fid', action='store_true', help='Whether to do fast fid test')
+    parser.add_argument('--adv', action='store_true', help='Whether to do adv')
     parser.add_argument('--resume_training', action='store_true', help='Whether to resume training')
     parser.add_argument('-i', '--image_folder', type=str, default='images', help="The folder name of samples")
     parser.add_argument('--ni', action='store_true', help="No interaction. Suitable for Slurm Job launcher")
     parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()
-    args.log_path = os.path.join(args.exp, 'logs', args.doc, args.job_id)
+    if not args.test and not args.sample and not args.fast_fid and not args.adv:
+        args.log_path = os.path.join(args.exp, 'logs', "{}_{}".format(args.doc, args.job_id))
+    else:
+        args.log_path = os.path.join(args.exp, 'logs', args.doc)
 
     # parse config file
     with open(os.path.join('configs', args.config), 'r') as f:
@@ -42,7 +46,7 @@ def parse_args_and_config():
 
     tb_path = os.path.join(args.exp, 'tensorboard', args.doc)
 
-    if not args.test and not args.sample and not args.fast_fid:
+    if not args.test and not args.sample and not args.fast_fid and not args.adv:
         if not args.resume_training:
             if os.path.exists(args.log_path):
                 overwrite = False
@@ -185,6 +189,8 @@ def main():
             runner.sample()
         elif args.fast_fid:
             runner.fast_fid()
+        elif args.adv:
+            runner.adv()
         else:
             runner.train()
     except:
