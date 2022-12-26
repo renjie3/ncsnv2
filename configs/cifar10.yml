@@ -46,8 +46,8 @@ data:
   random_flip: true
   rescaled: false
   num_workers: 4
-  sub_dataset: false
-  sub_number: 0
+  sub_dataset: true
+  subset_number: 0
 
 model:
   sigma_begin: 50

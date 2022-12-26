@@ -19,3 +19,16 @@ python main.py --config cifar10.yml --doc cifar10
 python main.py --config cifar10.yml --doc cifar10
 python main.py --config cifar10.yml --doc cifar10
 python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
+python main.py --config cifar10.yml --doc cifar10
