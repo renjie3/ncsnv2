@@ -38,3 +38,62 @@ python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0 --ni
 python main.py --adv --config cifar10_sub0.yml --doc cifar10 --ni
 python main.py --adv --config cifar10_sub0.yml --doc test_cifar10 --ni
 python main.py --adv --config cifar10_sub0.yml --doc test_cifar10 --ni
+python main.py --sample --config cifar10.yml -i cifar10 --doc test_cifar10 --ni
+python main.py --sample --config cifar10_sub0.yml -i cifar10_sub0 --doc cifar10_sub0 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss

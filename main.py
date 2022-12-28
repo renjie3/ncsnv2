@@ -31,6 +31,7 @@ def parse_args_and_config():
     parser.add_argument('--resume_training', action='store_true', help='Whether to resume training')
     parser.add_argument('-i', '--image_folder', type=str, default='images', help="The folder name of samples")
     parser.add_argument('--ni', action='store_true', help="No interaction. Suitable for Slurm Job launcher")
+    parser.add_argument('--adv_loss_type', type=str, default='min_forward_loss')
     parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()
@@ -176,7 +177,7 @@ def main():
     logging.info("Config =")
     print(">" * 80)
     config_dict = copy.copy(vars(config))
-    if not args.test and not args.sample and not args.fast_fid:
+    if not args.test and not args.sample and not args.fast_fid and not args.adv:
         del config_dict['tb_logger']
     print(yaml.dump(config_dict, default_flow_style=False))
     print("<" * 80)

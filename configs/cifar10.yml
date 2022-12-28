@@ -43,7 +43,7 @@ data:
   logit_transform: false
   uniform_dequantization: false
   gaussian_dequantization: false
-  random_flip: true
+  random_flip: false
   rescaled: false
   num_workers: 4
   sub_dataset: false

@@ -4,6 +4,7 @@ import torchvision.transforms as transforms
 from torchvision.datasets import CIFAR10, LSUN
 from datasets.celeba import CelebA
 from datasets.ffhq import FFHQ
+from datasets.adv_cifar10 import AdvCifar10
 from torch.utils.data import Subset
 import numpy as np
 
@@ -25,31 +26,16 @@ def get_dataset(args, config):
         ])
 
     if config.data.dataset == 'CIFAR10':
-        dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
-                          transform=tran_transform)
-        test_dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
+        if args.adv:
+            dataset = AdvCifar10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
+                            transform=tran_transform, args=args, config=config)
+            test_dataset = AdvCifar10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
+                            transform=test_transform, args=args, config=config)
+        else:
+            dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
+                            transform=tran_transform)
+            test_dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
                                transform=test_transform)
-
-        if config.data.sub_dataset:
-            if config.data.subset_number == 0:
-                sub_class = [2, 7, 9]
-                single_class_num = 3000
-                np_targets = np.array(dataset.targets)
-                new_data_list = []
-                new_targets_list = []
-                for i in range(len(sub_class)):
-                    sub_class_idx = np_targets == sub_class[i]
-                    new_data_list.append(dataset.data[sub_class_idx][:single_class_num])
-                    new_targets_list.append(np_targets[sub_class_idx][:single_class_num])
-                dataset.data = np.concatenate(new_data_list, axis=0)
-                dataset.targets = np.concatenate(new_targets_list, axis=0)
-                
-                for i in range(len(sub_class)):
-                    sub_class_idx = dataset.targets == sub_class[i]
-                    dataset.targets[sub_class_idx] = i
-
-            else:
-                raise("unknown subset_number")
 
     elif config.data.dataset == 'CELEBA':
         if config.data.random_flip:

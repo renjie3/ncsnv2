@@ -7,12 +7,20 @@ training:
   anneal_power: 2
   log_all_sigmas: false
 
+adv:
+  perturb_shape: [3000, 3, 32, 32]
+  adv_step: 20
+  adv_epsilon: 8
+  adv_alpha: 0.8
+  eot_gaussian_num: 3
+  t_seg_num: 8
+
 sampling:
   batch_size: 100
   data_init: false
   step_lr: 0.0000062
   n_steps_each: 5
-  ckpt_id: 300000
+  ckpt_id: 150000
   final_only: true
   fid: false
   denoise: true
@@ -43,7 +51,7 @@ data:
   logit_transform: false
   uniform_dequantization: false
   gaussian_dequantization: false
-  random_flip: true
+  random_flip: false
   rescaled: false
   num_workers: 4
   sub_dataset: true

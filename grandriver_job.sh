@@ -3,8 +3,10 @@ echo $JOB_ID
 NEXT_JOB_ID=`expr $JOB_ID + 1`
 echo $NEXT_JOB_ID > job_id.log
 
-GPU_ID='0, 6'
-MY_CMD="python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni"
+CONFIG_FILE="cifar10_sub0.yml"
+
+GPU_ID='6'
+MY_CMD="python main.py --adv --config ${CONFIG_FILE} --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh
@@ -25,3 +27,10 @@ echo ${JOB_ID}>>./history_job.log
 echo "GPU_ID=${GPU_ID}">>./history_job.log
 echo ${MY_CMD}>>./history_job.log
 echo "---------------------------------------------------------------" >>./history_job.log
+
+date >>./history_config.log
+echo "JOB_ID=${JOB_ID}">>./history_config.log
+echo "GPU_ID=${GPU_ID}">>./history_config.log
+echo ${MY_CMD}>>./history_config.log
+cat ./configs/${CONFIG_FILE}>>./history_config.log
+echo "---------------------------------------------------------------" >>./history_config.log

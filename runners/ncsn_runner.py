@@ -2,6 +2,8 @@ import numpy as np
 import glob
 import tqdm
 from losses.dsm import anneal_dsm_score_estimation, anneal_dsm_score_estimation_given_sigmas_noise
+from losses.adv import single_level, check_diff_sigma_gradient
+from tqdm import tqdm
 
 import torch.nn.functional as F
 import logging
@@ -36,6 +38,8 @@ class NCSNRunner():
         self.config = config
         args.log_sample_path = os.path.join(args.log_path, 'samples')
         os.makedirs(args.log_sample_path, exist_ok=True)
+        if args.adv:
+            self.adv_perturb = np.zeros(self.config.adv.perturb_shape)
 
     def train(self):
         dataset, test_dataset = get_dataset(self.args, self.config)
@@ -422,33 +426,65 @@ class NCSNRunner():
 
         score.load_state_dict(states[0], strict=True)
 
-        if self.config.model.ema:
-            ema_helper = EMAHelper(mu=self.config.model.ema_rate)
-            ema_helper.register(score)
-            ema_helper.load_state_dict(states[-1])
-            ema_helper.ema(score)
+        # if self.config.model.ema:
+        #     ema_helper = EMAHelper(mu=self.config.model.ema_rate)
+        #     ema_helper.register(score)
+        #     ema_helper.load_state_dict(states[-1])
+        #     ema_helper.ema(score)
 
-        sigmas_th = get_sigmas(self.config)
-        sigmas = sigmas_th.cpu().numpy()
+        sigmas = get_sigmas(self.config)
+        # sigmas = sigmas_th.cpu().numpy()
 
         dataset, _ = get_dataset(self.args, self.config)
-        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=True, num_workers=4)
+        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
 
         score.eval()
 
-        for i, (X, y) in enumerate(dataloader):
+        for i, (X, y, batch_idx) in enumerate(dataloader):
+
+            HIDDEN_CLASS = 0
+            hidden_idx_in_batch = y == HIDDEN_CLASS # select all the samples that belongs to birds
+            X = X[hidden_idx_in_batch]
+            batch_idx = batch_idx[hidden_idx_in_batch]
+
+            if batch_idx.shape[0] == 0:
+                continue
 
             X = X.to(self.config.device)
             X = data_transform(self.config, X)
 
-            labels = torch.randint(0, len(sigmas), (X.shape[0],), device=samples.device)
-            used_sigmas = sigmas[labels].view(X.shape[0], *([1] * len(samples.shape[1:])))
-            random_noise = torch.randn_like(X)
+            # labels = torch.randint(0, len(sigmas), (X.shape[0],), device=X.device)
+            # used_sigmas = sigmas[labels].view(X.shape[0], *([1] * len(X.shape[1:])))
+            # random_noise = torch.randn_like(X)
 
-            loss = anneal_dsm_score_estimation(score, X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=self.config.training.anneal_power, hook=hook)
+            # loss = anneal_dsm_score_estimation_given_sigmas_noise(score, X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=self.config.training.anneal_power)
 
-            input("check")
+            if args.adv_loss_type in ['min_forward_loss', 'max_forward_loss']:
+                x_adv = single_level(sigmas, X, score, self.args, self.config, i, dataloader)
+            elif args.adv_loss_type in ['check_diff_sigma_gradient']:
+                x_adv = check_diff_sigma_gradient(sigmas, X, score, self.args, self.config, i, dataloader)
 
+            batch_perturb = x_adv - X
+
+            self._set_adv_perturb(batch_idx, batch_perturb)
+
+        self._save_adv_perturb()
+
+        # input("check")
+
+    def _get_adv_perturb(self, idx, device):
+        adv_perturb_numpy = self.adv_perturb[idx]
+        return torch.tensor(adv_perturb_numpy).to(device)
+
+    def _set_adv_perturb(self, idx, batch_noise):
+        batch_noise.cpu().numpy()
+        self.adv_perturb[idx] = batch_noise.cpu().numpy()
+
+    def _save_adv_perturb(self, ):
+        adv_perturb_save_path = os.path.join(self.args.log_path, 'checkpoint_{}_{}_adv_perturb.npy'.format(self.config.sampling.ckpt_id, self.args.job_id))
+        print("The adv noise is saved at {}.".format(adv_perturb_save_path))
+        with open(adv_perturb_save_path, "wb") as f:
+            np.save(f, self.adv_perturb)
 
     def test(self):
         score = get_model(self.config)
