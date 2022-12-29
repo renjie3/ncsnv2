@@ -58,3 +58,8 @@ Tue 27 Dec 2022 09:40:41 PM EST
 GPU_ID=6
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss
 ---------------------------------------------------------------
+Wed 28 Dec 2022 09:14:57 PM EST
+12
+GPU_ID=4, 5
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --adv_loss_type max_forward_loss
+---------------------------------------------------------------

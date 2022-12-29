@@ -5,8 +5,8 @@ echo $NEXT_JOB_ID > job_id.log
 
 CONFIG_FILE="cifar10_sub0.yml"
 
-GPU_ID='6'
-MY_CMD="python main.py --adv --config ${CONFIG_FILE} --doc cifar10_sub0/4 --ni --adv_loss_type max_forward_loss"
+GPU_ID='4, 5'
+MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --adv_loss_type max_forward_loss"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh

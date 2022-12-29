@@ -14,6 +14,7 @@ adv:
   adv_alpha: 0.8
   eot_gaussian_num: 3
   t_seg_num: 8
+  gm_target: "whole_red"
 
 sampling:
   batch_size: 100

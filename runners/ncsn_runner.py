@@ -2,7 +2,7 @@ import numpy as np
 import glob
 import tqdm
 from losses.dsm import anneal_dsm_score_estimation, anneal_dsm_score_estimation_given_sigmas_noise
-from losses.adv import single_level, check_diff_sigma_gradient
+from losses.adv import single_level, check_diff_sigma_gradient, gradient_matching
 from tqdm import tqdm
 
 import torch.nn.functional as F
@@ -459,10 +459,14 @@ class NCSNRunner():
 
             # loss = anneal_dsm_score_estimation_given_sigmas_noise(score, X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=self.config.training.anneal_power)
 
-            if args.adv_loss_type in ['min_forward_loss', 'max_forward_loss']:
+            if self.args.adv_loss_type in ['min_forward_loss', 'max_forward_loss']:
                 x_adv = single_level(sigmas, X, score, self.args, self.config, i, dataloader)
-            elif args.adv_loss_type in ['check_diff_sigma_gradient']:
-                x_adv = check_diff_sigma_gradient(sigmas, X, score, self.args, self.config, i, dataloader)
+            elif self.args.adv_loss_type in ['check_diff_sigma_gradient']:
+                check_diff_sigma_gradient(sigmas, X, score, self.args, self.config, i, dataloader)
+                input("check done")
+            elif self.args.adv_loss_type in ['gradient_matching']:
+                gradient_matching(sigmas, X, score, self.args, self.config, i, dataloader)
+                input("check done")
 
             batch_perturb = x_adv - X
 

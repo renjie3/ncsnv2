@@ -45,3 +45,27 @@ class AdvCifar10(CIFAR10):
 
         label = np.array(self.targets[idx], dtype=np.int64)
         return img, label, idx
+
+class GradientMatchingTargetCifar10(AdvCifar10):
+    def __init__(self, root, train=True, download=True, transform=None, args=None, config=None):
+        super().__init__(root=root, train=train, download=download, transform=transform, args=args, config=config)
+
+        alpha = 0.4
+        
+        if config.data.sub_dataset and self.train:
+            if config.data.subset_number == 0:
+                if config.adv.gm_target == "whole_red":
+                    single_class_num = 3000
+                    self.data = self.data.astype(np.float)
+                    self.data[:3000, :, :, 0] = self.data[:3000, :, :, 0] * alpha + 255.0 * (1 - alpha)
+                    self.data = self.data.astype(np.uint8)
+
+                    # im = Image.fromarray(self.data[0])
+                    # im.convert('RGB').save('./test.png')
+
+                    print(self.data.shape)
+                    print(self.data.dtype)
+                    input("check")
+
+
+
