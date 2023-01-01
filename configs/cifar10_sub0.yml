@@ -1,5 +1,5 @@
 training:
-  batch_size: 128
+  batch_size: 30
   n_epochs: 500000
   n_iters: 300001
   snapshot_freq: 5000
@@ -12,9 +12,11 @@ adv:
   adv_step: 20
   adv_epsilon: 8
   adv_alpha: 0.8
-  eot_gaussian_num: 3
-  t_seg_num: 8
+  eot_gaussian_num: 2
+  t_seg_num: 6
   gm_target: "whole_red"
+  optim_mode: "pgd"
+  ckpt_id: 190000
 
 sampling:
   batch_size: 100

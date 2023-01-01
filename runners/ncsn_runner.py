@@ -415,10 +415,10 @@ class NCSNRunner():
                     img_id += 1
 
     def adv(self):
-        if self.config.sampling.ckpt_id is None:
+        if self.config.adv.ckpt_id is None:
             states = torch.load(os.path.join(self.args.log_path, 'checkpoint.pth'), map_location=self.config.device)
         else:
-            states = torch.load(os.path.join(self.args.log_path, f'checkpoint_{self.config.sampling.ckpt_id}.pth'),
+            states = torch.load(os.path.join(self.args.log_path, f'checkpoint_{self.config.adv.ckpt_id}.pth'),
                                 map_location=self.config.device)
 
         score = get_model(self.config)
@@ -435,42 +435,72 @@ class NCSNRunner():
         sigmas = get_sigmas(self.config)
         # sigmas = sigmas_th.cpu().numpy()
 
-        dataset, _ = get_dataset(self.args, self.config)
-        dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
+        if self.args.adv_loss_type not in ['gradient_matching']:
+            dataset, _ = get_dataset(self.args, self.config)
+            dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
+        else:
+            dataset, _, target_dataset, _ = get_dataset(self.args, self.config)
+            dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
+            target_dataloader = DataLoader(target_dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
 
         score.eval()
 
-        for i, (X, y, batch_idx) in enumerate(dataloader):
+        if self.args.adv_loss_type in ['gradient_matching']:
+            for i, (data_batch, target_data_batch) in enumerate(zip(dataloader, target_dataloader)):
 
-            HIDDEN_CLASS = 0
-            hidden_idx_in_batch = y == HIDDEN_CLASS # select all the samples that belongs to birds
-            X = X[hidden_idx_in_batch]
-            batch_idx = batch_idx[hidden_idx_in_batch]
+                X, y, batch_idx = data_batch
+                target_X, target_y, target_batch_idx = target_data_batch
 
-            if batch_idx.shape[0] == 0:
-                continue
+                HIDDEN_CLASS = 0
+                hidden_idx_in_batch = y == HIDDEN_CLASS # select all the samples that belongs to birds
+                X = X[hidden_idx_in_batch]
+                batch_idx = batch_idx[hidden_idx_in_batch]
+                target_X = target_X[hidden_idx_in_batch]
+                target_batch_idx = target_batch_idx[hidden_idx_in_batch]
 
-            X = X.to(self.config.device)
-            X = data_transform(self.config, X)
+                if batch_idx.shape[0] == 0:
+                    continue
 
-            # labels = torch.randint(0, len(sigmas), (X.shape[0],), device=X.device)
-            # used_sigmas = sigmas[labels].view(X.shape[0], *([1] * len(X.shape[1:])))
-            # random_noise = torch.randn_like(X)
+                X = X.to(self.config.device)
+                X = data_transform(self.config, X)
+                target_X = target_X.to(self.config.device)
+                target_X = data_transform(self.config, target_X)
 
-            # loss = anneal_dsm_score_estimation_given_sigmas_noise(score, X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=self.config.training.anneal_power)
+                if self.args.adv_loss_type in ['gradient_matching']:
+                    gradient_matching(sigmas, X, target_X, score, self.args, self.config, i, dataloader)
+                    # def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader):
+                    # input("check done")
 
-            if self.args.adv_loss_type in ['min_forward_loss', 'max_forward_loss']:
-                x_adv = single_level(sigmas, X, score, self.args, self.config, i, dataloader)
-            elif self.args.adv_loss_type in ['check_diff_sigma_gradient']:
-                check_diff_sigma_gradient(sigmas, X, score, self.args, self.config, i, dataloader)
-                input("check done")
-            elif self.args.adv_loss_type in ['gradient_matching']:
-                gradient_matching(sigmas, X, score, self.args, self.config, i, dataloader)
-                input("check done")
+                batch_perturb = x_adv - X
 
-            batch_perturb = x_adv - X
+                self._set_adv_perturb(batch_idx, batch_perturb)
 
-            self._set_adv_perturb(batch_idx, batch_perturb)
+        else:
+            for i, (X, y, batch_idx) in enumerate(dataloader):
+
+                HIDDEN_CLASS = 0
+                hidden_idx_in_batch = y == HIDDEN_CLASS # select all the samples that belongs to birds
+                X = X[hidden_idx_in_batch]
+                batch_idx = batch_idx[hidden_idx_in_batch]
+
+                if batch_idx.shape[0] == 0:
+                    continue
+
+                X = X.to(self.config.device)
+                X = data_transform(self.config, X)
+
+                if self.args.adv_loss_type in ['min_forward_loss', 'max_forward_loss']:
+                    x_adv = single_level(sigmas, X, score, self.args, self.config, i, dataloader)
+                elif self.args.adv_loss_type in ['check_diff_sigma_gradient']:
+                    check_diff_sigma_gradient(sigmas, X, score, self.args, self.config, i, dataloader)
+                    input("check done")
+                # elif self.args.adv_loss_type in ['gradient_matching']:
+                #     gradient_matching(sigmas, X, score, self.args, self.config, i, dataloader, source_dataloader)
+                #     input("check done")
+
+                batch_perturb = x_adv - X
+
+                self._set_adv_perturb(batch_idx, batch_perturb)
 
         self._save_adv_perturb()
 

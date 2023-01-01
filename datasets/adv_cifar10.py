@@ -63,9 +63,6 @@ class GradientMatchingTargetCifar10(AdvCifar10):
                     # im = Image.fromarray(self.data[0])
                     # im.convert('RGB').save('./test.png')
 
-                    print(self.data.shape)
-                    print(self.data.dtype)
-                    input("check")
-
-
-
+                    # print(self.data.shape)
+                    # print(self.data.dtype)
+                    # input("check")

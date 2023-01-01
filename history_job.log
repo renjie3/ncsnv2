@@ -63,3 +63,18 @@ Wed 28 Dec 2022 09:14:57 PM EST
 GPU_ID=4, 5
 python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --adv_loss_type max_forward_loss
 ---------------------------------------------------------------
+Fri 30 Dec 2022 05:06:05 PM EST
+13
+GPU_ID=3, 5
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --adv_loss_type max_forward_loss
+---------------------------------------------------------------
+Sun 01 Jan 2023 06:21:11 PM EST
+14
+GPU_ID=2
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------
+Sun 01 Jan 2023 06:32:38 PM EST
+15
+GPU_ID=2
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------
