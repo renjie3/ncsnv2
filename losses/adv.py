@@ -2,7 +2,7 @@ import torch
 from losses.dsm import anneal_dsm_score_estimation_given_sigmas_noise, anneal_dsm_score_estimation_target_gradient, anneal_dsm_score_estimation_poison_gradient
 from tqdm import tqdm
 
-def single_level(sigmas, X, score, args, config, _idx, dataloader):
+def single_level(sigmas, X, score, args, config, _idx, dataloader, init_noise):
     # labels = torch.randint(0, len(sigmas), (x_adv.shape[0],), device=x_adv.device)
     # used_sigmas = sigmas[labels].view(x_adv.shape[0], *([1] * len(x_adv.shape[1:])))
     # random_noise = torch.randn_like(x_adv)
@@ -27,7 +27,7 @@ def single_level(sigmas, X, score, args, config, _idx, dataloader):
     all_labels = torch.stack(all_labels, dim=0).view(t_seg_num, eot_gaussian_num, X.shape[0])
     all_gaussian_noise = torch.randn([t_seg_num, eot_gaussian_num, *X.shape]).to(X.device)
 
-    x_adv = X.detach().float() # TODO: bilevel has to use X + noise as init
+    x_adv = X.detach().float() + init_noise.detach() # TODO: bilevel has to use X + noise as init
     adv_step_loop_bar = tqdm(range(config.adv.adv_step))
     for _ in adv_step_loop_bar:
         adv_step_loop_bar.set_description("Batch [{}/{}]".format(_idx, len(dataloader) // 3)) # // 3 because we have 3 class, and we only train adv on bird.
@@ -43,9 +43,9 @@ def single_level(sigmas, X, score, args, config, _idx, dataloader):
                 with torch.enable_grad():
                     # if self.random_noise_every_adv_step:
                     #     random_noise = torch.randn([*X.shape]).to(dist_util.dev())
-                    if args.adv_loss_type == "min_forward_loss":
+                    if args.adv_loss_type in ["min_forward_loss", "bilevel_min_forward_loss", ]:
                         loss = anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
-                    elif args.adv_loss_type == "max_forward_loss":
+                    elif args.adv_loss_type in ["max_forward_loss", "bilevel_max_forward_loss", ]:
                         loss = - anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
                     grad = torch.autograd.grad(loss, [x_adv])[0]
                     accumulated_grad += grad

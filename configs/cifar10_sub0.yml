@@ -8,7 +8,7 @@ training:
   log_all_sigmas: false
 
 adv:
-  batch_size: 30
+  batch_size: 128
   perturb_shape: [3000, 3, 32, 32]
   adv_step: 20
   adv_epsilon: 8

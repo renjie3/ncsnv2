@@ -1,7 +1,7 @@
 import numpy as np
 import glob
 import tqdm
-from losses.dsm import anneal_dsm_score_estimation, anneal_dsm_score_estimation_given_sigmas_noise
+from losses.dsm import anneal_dsm_score_estimation, anneal_dsm_score_estimation_given_sigmas_noise, train_bilevel
 from losses.adv import single_level, check_diff_sigma_gradient, gradient_matching
 from tqdm import tqdm
 
@@ -435,9 +435,13 @@ class NCSNRunner():
         sigmas = get_sigmas(self.config)
         # sigmas = sigmas_th.cpu().numpy()
 
+        # TODO change loss_type to two levels
+
         if self.args.adv_loss_type not in ['gradient_matching']:
             dataset, _ = get_dataset(self.args, self.config)
             dataloader = DataLoader(dataset, batch_size=self.config.adv.batch_size, shuffle=False, num_workers=4)
+            bilevel_training_dataset, _ = get_dataset(self.args, self.config)
+            bilevel_training_dataloader = DataLoader(bilevel_training_dataset, batch_size=self.config.training.batch_size, shuffle=True, num_workers=4)
         else:
             dataset, _, target_dataset, _ = get_dataset(self.args, self.config)
             dataloader = DataLoader(dataset, batch_size=self.config.adv.batch_size, shuffle=False, num_workers=4)
@@ -475,6 +479,50 @@ class NCSNRunner():
 
                 self._set_adv_perturb(batch_idx, batch_perturb)
 
+        elif self.args.adv_loss_type in ['bilevel_min_forward_loss', 'bilevel_max_forward_loss']:
+
+            optimizer = get_optimizer(self.config, score.parameters())
+            for _idx_bilevel in range(self.args.bilevel_epoch):
+
+                score.eval()
+
+                for i, data_batch in enumerate(dataloader):
+
+                    X, y, batch_idx = data_batch
+                    if self.args.adv_loss_type in ['bilevel_gradient_matching']:
+                        target_X, target_y, target_batch_idx = target_data_batch
+
+                    HIDDEN_CLASS = 0
+                    hidden_idx_in_batch = y == HIDDEN_CLASS # select all the samples that belongs to birds
+                    X = X[hidden_idx_in_batch]
+                    batch_idx = batch_idx[hidden_idx_in_batch]
+                    if self.args.adv_loss_type in ['bilevel_gradient_matching']:
+                        target_X = target_X[hidden_idx_in_batch]
+                        target_batch_idx = target_batch_idx[hidden_idx_in_batch]
+
+                    if batch_idx.shape[0] == 0:
+                        continue
+
+                    X = X.to(self.config.device)
+                    X = data_transform(self.config, X)
+                    if self.args.adv_loss_type in ['bilevel_gradient_matching']:
+                        target_X = target_X.to(self.config.device)
+                        target_X = data_transform(self.config, target_X)
+
+                    if self.args.adv_loss_type in ['bilevel_gradient_matching']:
+                        x_adv = gradient_matching(sigmas, X, target_X, score, self.args, self.config, i, dataloader)
+                    elif self.args.adv_loss_type in ['bilevel_min_forward_loss', 'bilevel_max_forward_loss']:
+                        init_noise = self._get_adv_perturb(batch_idx, self.config.device)
+                        x_adv = single_level(sigmas, X, score, self.args, self.config, i, dataloader, init_noise)
+
+                    batch_perturb = x_adv - X
+
+                    self._set_adv_perturb(batch_idx, batch_perturb)
+
+                score.train()
+
+                train_bilevel(score, optimizer, bilevel_training_dataloader, self.config, data_transform, sigmas)
+
         else:
             for i, (X, y, batch_idx) in enumerate(dataloader):
 
@@ -508,7 +556,7 @@ class NCSNRunner():
 
     def _get_adv_perturb(self, idx, device):
         adv_perturb_numpy = self.adv_perturb[idx]
-        return torch.tensor(adv_perturb_numpy).to(device)
+        return torch.tensor(adv_perturb_numpy).to(device).float()
 
     def _set_adv_perturb(self, idx, batch_noise):
         batch_noise.cpu().numpy()

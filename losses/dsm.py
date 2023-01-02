@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 
 def anneal_dsm_score_estimation(scorenet, samples, sigmas, labels=None, anneal_power=2., hook=None):
     if labels is None:
@@ -76,3 +77,21 @@ def anneal_dsm_score_estimation_poison_gradient(scorenet, samples, sigmas, label
     grad = torch.autograd.grad(loss, differentiable_params, retain_graph=True, create_graph=True)
 
     return grad
+
+def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas):
+    for epoch in range(1000):
+        train_bar = tqdm(dataloader)
+        for i, (X, y, idx) in enumerate(train_bar):
+
+            score.train()
+
+            X = X.to(config.device)
+            X = data_transform(config, X)
+
+            loss = anneal_dsm_score_estimation(score, X, sigmas, None,
+                                                config.training.anneal_power,
+                                                None)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
