@@ -88,3 +88,27 @@ Sun 01 Jan 2023 08:49:39 PM EST
 GPU_ID=2
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
 ---------------------------------------------------------------
+Sun Jan  1 20:53:17 EST 2023
+1730261
+train sub_cifar
+#SBATCH --time=3:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------
+Sun Jan  1 20:54:39 EST 2023
+1730699
+train sub_cifar
+#SBATCH --time=3:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------
+Sun Jan  1 20:55:13 EST 2023
+1730726
+train sub_cifar
+#SBATCH --time=3:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------

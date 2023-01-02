@@ -160,3 +160,5 @@ python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0/4 --ni --adv_l
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching

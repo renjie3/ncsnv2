@@ -1,0 +1,5 @@
+Sun Jan  1 20:55:19 EST 2023
+1730726
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching --job_id 1730726_1
+---------------------------------------------------------------
