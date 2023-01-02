@@ -4,13 +4,13 @@ MY_JOB_ROOT_PATH=`pwd`
 # echo $MY_JOB_ROOT_PATH
 cd $MY_JOB_ROOT_PATH
 
-MYTIME="3:59:00"
+MYTIME="48:59:00"
 MYNTASKS="1"
 MYCPU="5"
 MYGRES="gpu:v100:1"
 
 JOB_INFO="train sub_cifar"
-MYCOMMEND="python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching"
+MYCOMMEND="python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss"
 
 MYCOMMEND2="python3 test.py -gpu_id 0 -model 1 -attack 1 --pgd_norm 7 -batch_size 50 -path Final/VANILLA_62162198_1/iter_50 --alpha 1000 --num_iter 100 --num_stop 2000 --test_subset --seed 1"
 

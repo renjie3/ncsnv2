@@ -78,17 +78,20 @@ def anneal_dsm_score_estimation_poison_gradient(scorenet, samples, sigmas, label
 
     return grad
 
-def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas):
+def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas, adv_perturb):
     for epoch in range(1000):
         train_bar = tqdm(dataloader)
         for i, (X, y, idx) in enumerate(train_bar):
+
+            adv_perturb_numpy = adv_perturb[idx]
+            noise = torch.tensor(adv_perturb_numpy).to(config.device).float()
 
             score.train()
 
             X = X.to(config.device)
             X = data_transform(config, X)
 
-            loss = anneal_dsm_score_estimation(score, X, sigmas, None,
+            loss = anneal_dsm_score_estimation(score, X + noise, sigmas, None,
                                                 config.training.anneal_power,
                                                 None)
 

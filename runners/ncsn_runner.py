@@ -418,7 +418,7 @@ class NCSNRunner():
         if self.config.adv.ckpt_id is None:
             states = torch.load(os.path.join(self.args.log_path, 'checkpoint.pth'), map_location=self.config.device)
         else:
-            states = torch.load(os.path.join(self.args.log_path, f'checkpoint_{self.config.adv.ckpt_id}.pth'),
+            states = torch.load(os.path.join(self.args.log_path, f'checkpoint_{self.args.ckpt_id}.pth'),
                                 map_location=self.config.device)
 
         score = get_model(self.config)
@@ -521,7 +521,9 @@ class NCSNRunner():
 
                 score.train()
 
-                train_bilevel(score, optimizer, bilevel_training_dataloader, self.config, data_transform, sigmas)
+                train_bilevel(score, optimizer, bilevel_training_dataloader, self.config, data_transform, sigmas, self.adv_perturb)
+
+                self._save_adv_perturb()
 
         else:
             for i, (X, y, batch_idx) in enumerate(dataloader):
@@ -562,8 +564,8 @@ class NCSNRunner():
         batch_noise.cpu().numpy()
         self.adv_perturb[idx] = batch_noise.cpu().numpy()
 
-    def _save_adv_perturb(self, ):
-        adv_perturb_save_path = os.path.join(self.args.log_path, 'checkpoint_{}_{}_adv_perturb.npy'.format(self.config.sampling.ckpt_id, self.args.job_id))
+    def _save_adv_perturb(self):
+        adv_perturb_save_path = os.path.join(self.args.log_path, 'checkpoint_{}_{}_adv_perturb.npy'.format(self.args.ckpt_id, self.args.job_id))
         print("The adv noise is saved at {}.".format(adv_perturb_save_path))
         with open(adv_perturb_save_path, "wb") as f:
             np.save(f, self.adv_perturb)

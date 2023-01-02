@@ -122,3 +122,51 @@ Sun 01 Jan 2023 10:09:38 PM EST
 GPU_ID=0, 4
 python main.py --config cifar10_sub0_training_snapshot_freq100.yml --doc cifar10_sub0 --ni --adv_loss_type gradient_matching
 ---------------------------------------------------------------
+Sun Jan  1 22:22:02 EST 2023
+1745664
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+---------------------------------------------------------------
+Sun Jan  1 22:22:15 EST 2023
+1745670
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+---------------------------------------------------------------
+Sun Jan  1 22:32:34 EST 2023
+1747343
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+---------------------------------------------------------------
+Sun Jan  1 22:32:43 EST 2023
+1747361
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+---------------------------------------------------------------
+Sun Jan  1 22:37:53 EST 2023
+1748176
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+---------------------------------------------------------------
+Sun Jan  1 22:38:02 EST 2023
+1748179
+train sub_cifar
+#SBATCH --time=48:59:00
+#SBATCH --cpus-per-task=5
+#SBATCH --gres=gpu:v100:1
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+---------------------------------------------------------------

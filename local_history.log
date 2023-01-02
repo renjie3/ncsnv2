@@ -178,3 +178,11 @@ python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type bilevel_min_forward_loss
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type bilevel_min_forward_loss
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type bilevel_min_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --chpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --chpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss

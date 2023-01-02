@@ -5,7 +5,7 @@
 #SBATCH --nodes=1                 # number of different nodes - could be an exact number or a range of nodes (same as -N)
 #SBATCH --mem-per-cpu=6G            # memory required per allocated CPU (or core) - amount of memory (in bytes)
 #SBATCH --job-name SimCLR      # you can give your job a name for easier identification (same as -J)
-#SBATCH --time=3:59:00             # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --time=48:59:00             # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --cpus-per-task=5           # number of CPUs (or cores) per task (same as -c)
 #SBATCH --ntasks=1                  # number of tasks - how many tasks (nodes) that you require (same as -n)
 #SBATCH --gres=gpu:v100:1
@@ -26,7 +26,7 @@ MY_ROOT_PATH="/mnt/home/renjie3/Documents/unlearnable/diffusion/ncsnv2/"
 
 cd ${MY_ROOT_PATH}
 JOB_INFO="train sub_cifar"
-MYCOMMEND="python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching --job_id ${SLURM_JOB_ID}_1"
+MYCOMMEND="python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss --job_id ${SLURM_JOB_ID}_1"
 MYCOMMEND2="No_commend2 --job_id ${SLURM_JOB_ID}_2"
 MYCOMMEND3="No_commend3 --job_id ${SLURM_JOB_ID}_3"
 

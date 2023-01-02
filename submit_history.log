@@ -3,3 +3,33 @@ Sun Jan  1 20:55:19 EST 2023
 train sub_cifar
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching --job_id 1730726_1
 ---------------------------------------------------------------
+Sun Jan  1 22:22:21 EST 2023
+1745664
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss --job_id 1745664_1
+---------------------------------------------------------------
+Sun Jan  1 22:22:21 EST 2023
+1745670
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss --job_id 1745670_1
+---------------------------------------------------------------
+Sun Jan  1 22:32:42 EST 2023
+1747343
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss --job_id 1747343_1
+---------------------------------------------------------------
+Sun Jan  1 22:32:47 EST 2023
+1747361
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss --job_id 1747361_1
+---------------------------------------------------------------
+Sun Jan  1 22:38:26 EST 2023
+1748176
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss --job_id 1748176_1
+---------------------------------------------------------------
+Sun Jan  1 22:38:28 EST 2023
+1748179
+train sub_cifar
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_min_forward_loss --job_id 1748179_1
+---------------------------------------------------------------

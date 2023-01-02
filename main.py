@@ -32,7 +32,8 @@ def parse_args_and_config():
     parser.add_argument('-i', '--image_folder', type=str, default='images', help="The folder name of samples")
     parser.add_argument('--ni', action='store_true', help="No interaction. Suitable for Slurm Job launcher")
     parser.add_argument('--adv_loss_type', type=str, default='min_forward_loss')
-    parser.add_argument('--bilevel_epoch', type=int, default=10, help='Random seed')
+    parser.add_argument('--bilevel_epoch', type=int, default=10)
+    parser.add_argument('--ckpt_id', type=int, default=100)
     parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()
