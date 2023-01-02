@@ -521,7 +521,7 @@ class NCSNRunner():
 
                 score.train()
 
-                train_bilevel(score, optimizer, bilevel_training_dataloader, self.config, data_transform, sigmas, self.adv_perturb)
+                train_bilevel(score, optimizer, bilevel_training_dataloader, self.config, data_transform, sigmas, self.adv_perturb, _idx_bilevel)
 
                 self._save_adv_perturb()
 

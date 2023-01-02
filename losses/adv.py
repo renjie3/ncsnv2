@@ -27,7 +27,7 @@ def single_level(sigmas, X, score, args, config, _idx, dataloader, init_noise):
     all_labels = torch.stack(all_labels, dim=0).view(t_seg_num, eot_gaussian_num, X.shape[0])
     all_gaussian_noise = torch.randn([t_seg_num, eot_gaussian_num, *X.shape]).to(X.device)
 
-    x_adv = X.detach().float() + init_noise.detach() # TODO: bilevel has to use X + noise as init
+    x_adv = X.detach().float() + init_noise.detach()
     adv_step_loop_bar = tqdm(range(config.adv.adv_step))
     for _ in adv_step_loop_bar:
         adv_step_loop_bar.set_description("Batch [{}/{}]".format(_idx, len(dataloader) // 3)) # // 3 because we have 3 class, and we only train adv on bird.

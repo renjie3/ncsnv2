@@ -78,9 +78,12 @@ def anneal_dsm_score_estimation_poison_gradient(scorenet, samples, sigmas, label
 
     return grad
 
-def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas, adv_perturb):
-    for epoch in range(1000):
+def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas, adv_perturb, idx_bilevel):
+    all_epochs = 70
+    for epoch in range(all_epochs):
         train_bar = tqdm(dataloader)
+        count = 0
+        loss_sum = 0
         for i, (X, y, idx) in enumerate(train_bar):
 
             adv_perturb_numpy = adv_perturb[idx]
@@ -98,3 +101,8 @@ def train_bilevel(score, optimizer, dataloader, config, data_transform, sigmas, 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            loss_sum += loss.item()
+            count += 1
+
+            train_bar.set_description("Bilevel_training Round {} Epoch[{}/{}] Loss:{:.4f}".format(idx_bilevel, epoch, all_epochs, loss_sum / float(count)))
