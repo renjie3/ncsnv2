@@ -117,3 +117,8 @@ Sun 01 Jan 2023 09:07:49 PM EST
 GPU_ID=0, 4
 python main.py --adv --config cifar10_sub0_training_snapshot_freq100.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
 ---------------------------------------------------------------
+Sun 01 Jan 2023 10:09:38 PM EST
+19
+GPU_ID=0, 4
+python main.py --config cifar10_sub0_training_snapshot_freq100.yml --doc cifar10_sub0 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------

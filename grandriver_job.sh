@@ -6,7 +6,7 @@ echo $NEXT_JOB_ID > job_id.log
 CONFIG_FILE="cifar10_sub0_training_snapshot_freq100.yml"
 
 GPU_ID='0, 4'
-MY_CMD="python main.py --adv --config ${CONFIG_FILE} --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching"
+MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --adv_loss_type gradient_matching"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh
