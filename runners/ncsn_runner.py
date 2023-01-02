@@ -437,11 +437,11 @@ class NCSNRunner():
 
         if self.args.adv_loss_type not in ['gradient_matching']:
             dataset, _ = get_dataset(self.args, self.config)
-            dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
+            dataloader = DataLoader(dataset, batch_size=self.config.adv.batch_size, shuffle=False, num_workers=4)
         else:
             dataset, _, target_dataset, _ = get_dataset(self.args, self.config)
-            dataloader = DataLoader(dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
-            target_dataloader = DataLoader(target_dataset, batch_size=self.config.sampling.batch_size, shuffle=False, num_workers=4)
+            dataloader = DataLoader(dataset, batch_size=self.config.adv.batch_size, shuffle=False, num_workers=4)
+            target_dataloader = DataLoader(target_dataset, batch_size=self.config.adv.batch_size, shuffle=False, num_workers=4)
 
         score.eval()
 

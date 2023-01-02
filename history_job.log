@@ -83,3 +83,8 @@ Sun 01 Jan 2023 08:21:17 PM EST
 GPU_ID=2
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
 ---------------------------------------------------------------
+Sun 01 Jan 2023 08:49:39 PM EST
+17
+GPU_ID=2
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching
+---------------------------------------------------------------

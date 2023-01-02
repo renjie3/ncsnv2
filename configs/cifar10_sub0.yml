@@ -1,5 +1,5 @@
 training:
-  batch_size: 30
+  batch_size: 128
   n_epochs: 500000
   n_iters: 300001
   snapshot_freq: 5000
@@ -8,6 +8,7 @@ training:
   log_all_sigmas: false
 
 adv:
+  batch_size: 30
   perturb_shape: [3000, 3, 32, 32]
   adv_step: 20
   adv_epsilon: 8
