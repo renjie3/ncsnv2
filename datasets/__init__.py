@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from torchvision.datasets import CIFAR10, LSUN
 from datasets.celeba import CelebA
 from datasets.ffhq import FFHQ
-from datasets.adv_cifar10 import AdvCifar10, GradientMatchingTargetCifar10
+from datasets.adv_cifar10 import AdvCifar10, GradientMatchingTargetCifar10, PoisonCIFAR10
 from torch.utils.data import Subset
 import numpy as np
 
@@ -38,6 +38,11 @@ def get_dataset(args, config):
                                 transform=test_transform, args=args, config=config)
                 
                 return dataset, test_dataset, target_dataset, target_test_dataset
+        elif args.poison:
+            dataset = PoisonCIFAR10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
+                            transform=tran_transform, args=args, config=config)
+            test_dataset = PoisonCIFAR10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
+                            transform=test_transform, args=args, config=config)
         else:
             dataset = CIFAR10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
                             transform=tran_transform)

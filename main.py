@@ -34,6 +34,8 @@ def parse_args_and_config():
     parser.add_argument('--adv_loss_type', type=str, default='min_forward_loss')
     parser.add_argument('--bilevel_epoch', type=int, default=10)
     parser.add_argument('--ckpt_id', type=int, default=100)
+    parser.add_argument('--poison', action='store_true', help='Whether to do poison')
+    parser.add_argument('--poison_path', type=str, default='')
     parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()

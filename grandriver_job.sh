@@ -3,10 +3,10 @@ echo $JOB_ID
 NEXT_JOB_ID=`expr $JOB_ID + 1`
 echo $NEXT_JOB_ID > job_id.log
 
-CONFIG_FILE="cifar10_sub0_training_snapshot_freq100.yml"
+CONFIG_FILE="cifar10_sub0.yml"
 
-GPU_ID='0, 4'
-MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --adv_loss_type gradient_matching"
+GPU_ID='0'
+MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0/4/checkpoint_150000_10_adv_perturb.npy"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh

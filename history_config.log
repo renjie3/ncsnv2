@@ -1099,3 +1099,264 @@ optim:
   amsgrad: false
   eps: 0.00000001
 ---------------------------------------------------------------
+Mon 02 Jan 2023 04:12:44 PM EST
+JOB_ID=20
+GPU_ID=1, 2
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0_13/checkpoint_150000_17_adv_perturb.npy
+training:
+  batch_size: 128
+  n_epochs: 500000
+  n_iters: 190001
+  snapshot_freq: 5000
+  snapshot_sampling: true
+  anneal_power: 2
+  log_all_sigmas: false
+
+adv:
+  batch_size: 128
+  perturb_shape: [9000, 3, 32, 32]
+  adv_step: 20
+  adv_epsilon: 8
+  adv_alpha: 0.8
+  eot_gaussian_num: 2
+  t_seg_num: 6
+  gm_target: "whole_red"
+  optim_mode: "pgd"
+  ckpt_id: 190000
+
+sampling:
+  batch_size: 100
+  data_init: false
+  step_lr: 0.0000062
+  n_steps_each: 5
+  ckpt_id: 150000
+  final_only: true
+  fid: false
+  denoise: true
+  num_samples4fid: 10000
+  inpainting: false
+  interpolation: false
+  n_interpolations: 15
+
+fast_fid:
+  batch_size: 1000
+  num_samples: 1000
+  step_lr: 0.0000062
+  n_steps_each: 5
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  verbose: false
+  ensemble: false
+
+test:
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  batch_size: 100
+
+data:
+  dataset: "CIFAR10"
+  image_size: 32
+  channels: 3
+  logit_transform: false
+  uniform_dequantization: false
+  gaussian_dequantization: false
+  random_flip: false
+  rescaled: false
+  num_workers: 4
+  sub_dataset: true
+  subset_number: 0
+
+model:
+  sigma_begin: 50
+  num_classes: 232
+  ema: true
+  ema_rate: 0.999
+  spec_norm: false
+  sigma_dist: geometric
+  sigma_end: 0.01
+  normalization: InstanceNorm++
+  nonlinearity: elu
+  ngf: 128
+
+optim:
+  weight_decay: 0.000
+  optimizer: "Adam"
+  lr: 0.0001
+  beta1: 0.9
+  amsgrad: false
+  eps: 0.00000001
+---------------------------------------------------------------
+Mon 02 Jan 2023 04:17:31 PM EST
+JOB_ID=21
+GPU_ID=1, 2
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0/4/checkpoint_150000_11_adv_perturb.npy
+training:
+  batch_size: 128
+  n_epochs: 500000
+  n_iters: 190001
+  snapshot_freq: 5000
+  snapshot_sampling: true
+  anneal_power: 2
+  log_all_sigmas: false
+
+adv:
+  batch_size: 128
+  perturb_shape: [9000, 3, 32, 32]
+  adv_step: 20
+  adv_epsilon: 8
+  adv_alpha: 0.8
+  eot_gaussian_num: 2
+  t_seg_num: 6
+  gm_target: "whole_red"
+  optim_mode: "pgd"
+  ckpt_id: 190000
+
+sampling:
+  batch_size: 100
+  data_init: false
+  step_lr: 0.0000062
+  n_steps_each: 5
+  ckpt_id: 150000
+  final_only: true
+  fid: false
+  denoise: true
+  num_samples4fid: 10000
+  inpainting: false
+  interpolation: false
+  n_interpolations: 15
+
+fast_fid:
+  batch_size: 1000
+  num_samples: 1000
+  step_lr: 0.0000062
+  n_steps_each: 5
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  verbose: false
+  ensemble: false
+
+test:
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  batch_size: 100
+
+data:
+  dataset: "CIFAR10"
+  image_size: 32
+  channels: 3
+  logit_transform: false
+  uniform_dequantization: false
+  gaussian_dequantization: false
+  random_flip: false
+  rescaled: false
+  num_workers: 4
+  sub_dataset: true
+  subset_number: 0
+
+model:
+  sigma_begin: 50
+  num_classes: 232
+  ema: true
+  ema_rate: 0.999
+  spec_norm: false
+  sigma_dist: geometric
+  sigma_end: 0.01
+  normalization: InstanceNorm++
+  nonlinearity: elu
+  ngf: 128
+
+optim:
+  weight_decay: 0.000
+  optimizer: "Adam"
+  lr: 0.0001
+  beta1: 0.9
+  amsgrad: false
+  eps: 0.00000001
+---------------------------------------------------------------
+Mon 02 Jan 2023 04:17:47 PM EST
+JOB_ID=22
+GPU_ID=0
+python main.py --config cifar10_sub0.yml --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0/4/checkpoint_150000_10_adv_perturb.npy
+training:
+  batch_size: 128
+  n_epochs: 500000
+  n_iters: 190001
+  snapshot_freq: 5000
+  snapshot_sampling: true
+  anneal_power: 2
+  log_all_sigmas: false
+
+adv:
+  batch_size: 128
+  perturb_shape: [9000, 3, 32, 32]
+  adv_step: 20
+  adv_epsilon: 8
+  adv_alpha: 0.8
+  eot_gaussian_num: 2
+  t_seg_num: 6
+  gm_target: "whole_red"
+  optim_mode: "pgd"
+  ckpt_id: 190000
+
+sampling:
+  batch_size: 100
+  data_init: false
+  step_lr: 0.0000062
+  n_steps_each: 5
+  ckpt_id: 150000
+  final_only: true
+  fid: false
+  denoise: true
+  num_samples4fid: 10000
+  inpainting: false
+  interpolation: false
+  n_interpolations: 15
+
+fast_fid:
+  batch_size: 1000
+  num_samples: 1000
+  step_lr: 0.0000062
+  n_steps_each: 5
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  verbose: false
+  ensemble: false
+
+test:
+  begin_ckpt: 5000
+  end_ckpt: 300000
+  batch_size: 100
+
+data:
+  dataset: "CIFAR10"
+  image_size: 32
+  channels: 3
+  logit_transform: false
+  uniform_dequantization: false
+  gaussian_dequantization: false
+  random_flip: false
+  rescaled: false
+  num_workers: 4
+  sub_dataset: true
+  subset_number: 0
+
+model:
+  sigma_begin: 50
+  num_classes: 232
+  ema: true
+  ema_rate: 0.999
+  spec_norm: false
+  sigma_dist: geometric
+  sigma_end: 0.01
+  normalization: InstanceNorm++
+  nonlinearity: elu
+  ngf: 128
+
+optim:
+  weight_decay: 0.000
+  optimizer: "Adam"
+  lr: 0.0001
+  beta1: 0.9
+  amsgrad: false
+  eps: 0.00000001
+---------------------------------------------------------------
