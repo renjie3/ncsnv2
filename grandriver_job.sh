@@ -3,9 +3,9 @@ echo $JOB_ID
 NEXT_JOB_ID=`expr $JOB_ID + 1`
 echo $NEXT_JOB_ID > job_id.log
 
-CONFIG_FILE="cifar10_sub0.yml"
+CONFIG_FILE="cifar10_sub0_training_snapshot_freq100.yml"
 
-GPU_ID='2'
+GPU_ID='0, 4'
 MY_CMD="python main.py --adv --config ${CONFIG_FILE} --doc cifar10_sub0_13 --ni --adv_loss_type gradient_matching"
 MY_ROOT_PATH=`pwd`
 
