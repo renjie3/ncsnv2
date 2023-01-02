@@ -467,7 +467,7 @@ class NCSNRunner():
                 target_X = data_transform(self.config, target_X)
 
                 if self.args.adv_loss_type in ['gradient_matching']:
-                    gradient_matching(sigmas, X, target_X, score, self.args, self.config, i, dataloader)
+                    x_adv = gradient_matching(sigmas, X, target_X, score, self.args, self.config, i, dataloader)
                     # def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader):
                     # input("check done")
 
