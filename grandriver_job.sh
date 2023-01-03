@@ -6,7 +6,7 @@ echo $NEXT_JOB_ID > job_id.log
 CONFIG_FILE="cifar10_sub0.yml"
 
 GPU_ID='0'
-MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0/4/checkpoint_150000_10_adv_perturb.npy"
+MY_CMD="python main.py --config ${CONFIG_FILE} --doc cifar10_sub0 --ni --poison --poison_path /egr/research-dselab/renjie3/renjie/diffusion/ncsnv2/exp/logs/cifar10_sub0_19/checkpoint_100_1966679_1_adv_perturb.npy"
 MY_ROOT_PATH=`pwd`
 
 echo "cd ${MY_ROOT_PATH}" > ./cmd/cmd_${JOB_ID}.sh

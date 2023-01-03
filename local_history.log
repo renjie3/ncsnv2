@@ -199,3 +199,15 @@ python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 1
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
 python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_max_forward_loss
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --ckpt_id 100 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --model_group --ckpt_id_gourp 100 200 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --model_group --ckpt_id_gourp 100 200 --ni --adv_loss_type bilevel_gradient_matching
+python main.py --adv --config cifar10_sub0.yml --doc cifar10_sub0_19 --model_group --ckpt_id_gourp 100 200 --ni --adv_loss_type bilevel_gradient_matching

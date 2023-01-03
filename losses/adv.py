@@ -2,7 +2,7 @@ import torch
 from losses.dsm import anneal_dsm_score_estimation_given_sigmas_noise, anneal_dsm_score_estimation_target_gradient, anneal_dsm_score_estimation_poison_gradient
 from tqdm import tqdm
 
-def single_level(sigmas, X, score, args, config, _idx, dataloader, init_noise):
+def single_level(sigmas, X, score, args, config, _idx, dataloader, init_noise, score_group):
     # labels = torch.randint(0, len(sigmas), (x_adv.shape[0],), device=x_adv.device)
     # used_sigmas = sigmas[labels].view(x_adv.shape[0], *([1] * len(x_adv.shape[1:])))
     # random_noise = torch.randn_like(x_adv)
@@ -43,12 +43,21 @@ def single_level(sigmas, X, score, args, config, _idx, dataloader, init_noise):
                 with torch.enable_grad():
                     # if self.random_noise_every_adv_step:
                     #     random_noise = torch.randn([*X.shape]).to(dist_util.dev())
-                    if args.adv_loss_type in ["min_forward_loss", "bilevel_min_forward_loss", ]:
-                        loss = anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
-                    elif args.adv_loss_type in ["max_forward_loss", "bilevel_max_forward_loss", ]:
-                        loss = - anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
-                    grad = torch.autograd.grad(loss, [x_adv])[0]
-                    accumulated_grad += grad
+                    if args.model_group:
+                        for score_idx in range(len(score_gourp)):
+                            if args.adv_loss_type in ["min_forward_loss", "bilevel_min_forward_loss", ]:
+                                loss = anneal_dsm_score_estimation_given_sigmas_noise(score_gourp[score_idx], x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
+                            elif args.adv_loss_type in ["max_forward_loss", "bilevel_max_forward_loss", ]:
+                                loss = - anneal_dsm_score_estimation_given_sigmas_noise(score_gourp[score_idx], x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
+                            grad = torch.autograd.grad(loss, [x_adv])[0]
+                            accumulated_grad += grad
+                    else:
+                        if args.adv_loss_type in ["min_forward_loss", "bilevel_min_forward_loss", ]:
+                            loss = anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
+                        elif args.adv_loss_type in ["max_forward_loss", "bilevel_max_forward_loss", ]:
+                            loss = - anneal_dsm_score_estimation_given_sigmas_noise(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power)
+                        grad = torch.autograd.grad(loss, [x_adv])[0]
+                        accumulated_grad += grad
                 # print(loss.item())
                 accumulated_loss += loss.item()
         print("accumulated_loss:", accumulated_loss)
@@ -135,9 +144,15 @@ def check_diff_sigma_gradient(sigmas, X, score, args, config, _idx, dataloader):
     return
 
 
-def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader):
+def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader, init_noise, score_group):
 
-    differentiable_params = [p for p in score.parameters() if p.requires_grad]
+    if args.model_group:
+        differentiable_params_group = []
+        for score_idx in range(len(score_group)):
+            differentiable_params = [p for p in score_group[score_idx].parameters() if p.requires_grad]
+            differentiable_params_group.append(differentiable_params)
+    else:
+        differentiable_params = [p for p in score.parameters() if p.requires_grad]
 
     eot_gaussian_num = config.adv.eot_gaussian_num
     t_seg_num = config.adv.t_seg_num
@@ -159,7 +174,7 @@ def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader
     all_labels = torch.stack(all_labels, dim=0).view(t_seg_num, eot_gaussian_num, X.shape[0])
     all_gaussian_noise = torch.randn([t_seg_num, eot_gaussian_num, *X.shape]).to(X.device)
 
-    x_adv = X.detach().float() # TODO: bilevel has to use X + noise as init
+    x_adv = X.detach().float() + init_noise.detach() # TODO: bilevel has to use X + noise as init
     adv_step_loop_bar = tqdm(range(config.adv.adv_step))
     for _ in adv_step_loop_bar:
         adv_step_loop_bar.set_description("Batch [{}/{}]".format(_idx, len(dataloader) // 3)) # // 3 because we have 3 class, and we only train adv on bird.
@@ -176,21 +191,39 @@ def gradient_matching(sigmas, X, target_X, score, args, config, _idx, dataloader
                 with torch.enable_grad():
                     # if self.random_noise_every_adv_step:
                     #     random_noise = torch.randn([*X.shape]).to(dist_util.dev())
-                    if args.adv_loss_type == "gradient_matching":
-                        target_gradient = anneal_dsm_score_estimation_target_gradient(score, target_X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params)
+                    if args.model_group:
+                        for score_idx in range(len(score_group)):
+                            if args.adv_loss_type in ["gradient_matching", "bilevel_gradient_matching"]:
+                                target_gradient = anneal_dsm_score_estimation_target_gradient(score_group[score_idx], target_X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params_group[score_idx])
+                            else:
+                                raise("wrong adv_loss_type!")
+                            poison_gradient = anneal_dsm_score_estimation_poison_gradient(score_group[score_idx], x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params_group[score_idx])
+
+                            one_step_gm_loss = gradient_matching_loss(target_gradient, poison_gradient)
+
+                            one_step_gm_loss.backward()
+                            accumulated_loss += one_step_gm_loss.item()
+                            accumulated_count += 1
+
+                            if config.adv.optim_mode == "pgd":
+                                accumulated_grad += x_adv.grad.detach()
+
                     else:
-                        raise("wrong adv_loss_type!")
-                    poison_gradient = anneal_dsm_score_estimation_poison_gradient(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params)
+                        if args.adv_loss_type in ["gradient_matching", "bilevel_gradient_matching"]:
+                            target_gradient = anneal_dsm_score_estimation_target_gradient(score, target_X, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params)
+                        else:
+                            raise("wrong adv_loss_type!")
+                        poison_gradient = anneal_dsm_score_estimation_poison_gradient(score, x_adv, sigmas, labels=labels, used_sigmas=used_sigmas, random_noise=random_noise, anneal_power=config.training.anneal_power, differentiable_params=differentiable_params)
 
-                    one_step_gm_loss = gradient_matching_loss(target_gradient, poison_gradient)
+                        one_step_gm_loss = gradient_matching_loss(target_gradient, poison_gradient)
 
-                    one_step_gm_loss.backward()
-                    accumulated_loss += one_step_gm_loss.item()
-                    accumulated_count += 1
+                        one_step_gm_loss.backward()
+                        accumulated_loss += one_step_gm_loss.item()
+                        accumulated_count += 1
 
-                    if config.adv.optim_mode == "pgd":
-                        accumulated_grad += x_adv.grad.detach()
-                        # x_adv = x_adv.detach() + adv_alpha * torch.sign(x_adv.grad.detach())
+                        if config.adv.optim_mode == "pgd":
+                            accumulated_grad += x_adv.grad.detach()
+                            # x_adv = x_adv.detach() + adv_alpha * torch.sign(x_adv.grad.detach())
 
                     # x_adv.data = torch.min(torch.max(x_adv.data, X - adv_epsilon), X + adv_epsilon)
                     # x_adv.data = torch.clamp(x_adv.data, img_min, img_max)

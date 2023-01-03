@@ -36,6 +36,8 @@ def parse_args_and_config():
     parser.add_argument('--ckpt_id', type=int, default=100)
     parser.add_argument('--poison', action='store_true', help='Whether to do poison')
     parser.add_argument('--poison_path', type=str, default='')
+    parser.add_argument('--model_group', action='store_true', help='Whether to do poison')
+    parser.add_argument('--ckpt_id_gourp', default=[100], nargs='+', type=int, help='noise shape')
     parser.add_argument('--job_id', type=str, default='local')
 
     args = parser.parse_args()

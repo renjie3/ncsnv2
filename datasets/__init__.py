@@ -31,13 +31,12 @@ def get_dataset(args, config):
                             transform=tran_transform, args=args, config=config)
             test_dataset = AdvCifar10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
                             transform=test_transform, args=args, config=config)
-            if args.adv_loss_type == "gradient_matching":
-                target_dataset = GradientMatchingTargetCifar10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
-                                transform=tran_transform, args=args, config=config)
-                target_test_dataset = GradientMatchingTargetCifar10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
-                                transform=test_transform, args=args, config=config)
-                
-                return dataset, test_dataset, target_dataset, target_test_dataset
+            target_dataset = GradientMatchingTargetCifar10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
+                            transform=tran_transform, args=args, config=config)
+            target_test_dataset = GradientMatchingTargetCifar10(os.path.join(args.exp, 'datasets', 'cifar10_test'), train=False, download=True,
+                            transform=test_transform, args=args, config=config)
+            
+            return dataset, test_dataset, target_dataset, target_test_dataset
         elif args.poison:
             dataset = PoisonCIFAR10(os.path.join(args.exp, 'datasets', 'cifar10'), train=True, download=True,
                             transform=tran_transform, args=args, config=config)
